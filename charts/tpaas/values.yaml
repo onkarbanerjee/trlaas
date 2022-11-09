@@ -1,0 +1,148 @@
+nf:
+  version: "tpaas_tag"
+  vendorId: "mvnr"
+  mtcilId: "mtcil1" #do not edit
+  nfClass: "mgmt"
+  nfType: "mtcil"
+  nfId: "mtcil1"
+
+  cnftpl_configmap:
+    mgmt_cfg:
+      create: true
+      metaspec:
+         annotations:
+            configMgmt: enabled
+    static_cfg:
+      create: true
+      metaspec: {}
+    env_cfg:
+      create: false
+      metaspec: {}
+  cnftpl_secret:
+      create: false
+      metaspec: {}
+      secretspec: {}
+  cnftpl_namespaces:
+      create: false
+      metaspec: {}
+  cnftpl_dashboard:
+      create: false
+      metaspec: {}
+  cnftpl_eventdef:
+      create: true
+      metaspec: {}
+  cnftpl_alertsdef:
+      create: false
+      metaspec: {}
+  cnftpl_metricsdef:
+      create: false
+      metaspec: {}
+
+app_name_prefix: ""
+namespace: mvnr-mtcil1-mgmt-mtcil-mtcil1
+
+common:
+  app_name: tpaas
+
+componentSpec:
+  deployment:
+    pod_metaspec:
+      labels:
+        app: tpaas
+      annotations:
+        sidecar.istio.io/inject: "false"
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "7070"
+
+  service_fend:
+    metaspec: {}
+    ports:
+      port: "7070"
+      targetPort: "7070"
+      nodePort: "32244"
+    type: NodePort
+
+  service: 
+    metaspec:
+      labels:
+        app: tpaas
+
+scaling:
+  enabled: true
+  max_replicas: 2
+  min_replicas: 1
+  target_cpu_percentage: 70
+  target_memory_percentage: 90
+
+
+etcd_svc_fqdn: "etcd.mvnr-mtcil1-infra-mtcil-mtcil1.svc.cluster.local:2379"
+
+replica_count: 1
+hub: 10.1.1.1:5000
+tpaas_service:
+  log_level: "INFO"
+  analytic_kafka_brokers: 
+  schema_registry_url: ""
+  mtcil_kafka_brokers: kafka-svc.mvnr-mtcil1-infra-mtcil-mtcil1.svc.cluster.local:9092
+  retry_count: 60
+  num_of_partitions: 1
+  replication_factor: 1
+  schema_registry_non_retriable_err_codes: "42201" #if have multple error codes use like "42201|42202|42203" etc
+  init_container:
+    image:
+      repository: mtcil-svc-init
+      tag: 21.2.2
+  container:
+    hostname: tpaas
+    image:
+      repository: tpaas
+      tag: tpaas_tag #replaced by build script
+    resource:
+      limit_memory: 500Mi
+      limit_cpu: 200m
+      request_memory: 100Mi
+      request_cpu: 100m
+    mount:
+      type: DirectoryOrCreate
+      container_path: /opt/
+      host_path: /data
+      
+slt:
+  maxActivePerNf: 10
+  nf_success_response_status_codes: "200|204" #if have multple success status codes use like "200|204" etc
+  etcd_timeout_seconds: "15"
+
+oam_sidecar:
+  container:
+    hostname: cim
+    image:
+      repository: cim
+      tag: 21.2.2
+    resource:
+      limit_memory: 500Mi
+      limit_cpu: 200m
+      request_memory: 100Mi
+      request_cpu: 100m
+    ports: 
+      server: 4222
+    mount:
+      type: Directory
+      container_path: /opt/logs
+      host_path: /data/logs
+
+podConfig:
+
+affinity:
+  nodeAffinity: {}
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: component
+            operator: In
+            values:
+            - "tpaas"
+        topologyKey: kubernetes.io/hostname

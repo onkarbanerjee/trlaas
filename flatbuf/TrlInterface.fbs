@@ -1,0 +1,20 @@
+namespace TrlInterface;
+table TrlSpec {
+     key:string; // fieldname
+     value:string; //value
+     type:string;// type
+}
+
+table TrlDetails {
+        trlSpec: [TrlSpec];
+        recordName:string;
+}
+
+table Trl {
+   containerName:string;
+   containerID:string;   // containerid of app
+   trlDetails:[TrlDetails];
+}
+
+root_type Trl;
+

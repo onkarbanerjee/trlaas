@@ -1,0 +1,51 @@
+#build script
+
+ARG BUILD_DISTRO_IMAGE
+ARG BUILD_DISTRO_VERSION
+ARG BUILDER_IMAGE
+ARG BUILDER_VERSION
+ARG BASE_IMAGE
+ARG BASE_VERSION
+
+################
+# First phase, Download dependency packages based on go.mod and generate binary
+
+#FROM tpaas-builder:v0.1 as tpaas-builder
+FROM $BUILDER_IMAGE:$BUILDER_VERSION as tpaas-builder
+
+ARG BUILDER_LABEL	
+
+RUN echo "Tagging Label IMAGE-TYPE=$BUILDER_LABEL"
+LABEL IMAGE-TYPE="$BUILDER_LABEL"
+
+ADD . $GOPATH/src/trlaas
+
+WORKDIR $GOPATH/src/trlaas
+
+RUN ls -lrt $GOPATH/src/trlaas && pwd
+
+RUN GO111MODULE=on 
+
+RUN go fmt
+
+RUN cp -f get_containerid.sh /opt/bin/
+
+RUN go build -o /opt/bin/tpaas
+
+RUN md5sum /opt/bin/*
+
+################
+# Second phase, Copy the compiled binaries and generate release artifact for TPAAS
+
+FROM $BASE_IMAGE:$BASE_VERSION
+RUN microdnf install curl bash gcc iputils net-tools iproute && microdnf update
+RUN set -ex mkdir -p /opt/bin/
+WORKDIR /opt/bin
+COPY --from=tpaas-builder /opt/bin /opt/bin
+ENV USER=mtcil \
+    PATH="/opt/bin:${PATH}"
+RUN useradd $USER && md5sum /opt/bin/*
+RUN ls -lrt
+USER $USER
+#CMD ["/bin/bash"]
+ENTRYPOINT ["tpaas"]

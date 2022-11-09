@@ -1,0 +1,1263 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TPaaS Operations",
+    "version": "1.0.0",
+    "description": "This is a list of operations supported on TPaaS",
+    "termsOfService": "",
+    "contact": {
+      "name": "Mavenir Systems",
+      "url": "https://www.mavenir.com",
+      "email": "support@mavenir.com"
+    },
+    "x-logo": {
+      "url": ""
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "TPaaS server"
+    }
+  ],
+  "paths": {
+    "/tpaas/slt/sessions/{traceSessionId}": {
+      "post": {
+        "summary": "Initiate a new Subscriber Level Tracing (SLT) session at TPaaS",
+        "operationId": "SltStart",
+        "tags": [
+          "slt",
+          "tpaas"
+        ],
+        "parameters": [
+          {
+            "name": "traceSessionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the SLT session",
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The Subscriber Level Tracing (SLT) session to activate at the TPaaS",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "SLT session parameters",
+                "properties": {
+                  "traceSessionId": {
+                    "type": "string",
+                    "example": "123e4567-e89b-12d3-a456-426614174000"
+                  },
+                  "traceObjectType": {
+                    "type": "string",
+                    "enum": [
+                      "SUPI",
+                      "GPSI",
+                      "PEI",
+                      "SUCI",
+                      "IMEISV",
+                      "NF",
+                      "UEIP",
+                      "CELLLIST"
+                    ]
+                  },
+                  "traceObjectValue": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "*"
+                        ]
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "example": "470010171566423"
+                  },
+                  "traceInterfaces": {
+                    "type": "array",
+                    "description": "The list of interfaces to which this session pertains",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "N4",
+                            "N2",
+                            "N8",
+                            "N10",
+                            "N11",
+                            "N12",
+                            "N13",
+                            "N14",
+                            "N15",
+                            "N16",
+                            "N20",
+                            "N22",
+                            "N24",
+                            "N26",
+                            "N27",
+                            "N31",
+                            "N58",
+                            "Nnrf",
+                            "GTP_V1",
+                            "ALL",
+                            "NG-C",
+                            "Xn-C",
+                            "Uu",
+                            "F1-C",
+                            "E1",
+                            "E2",
+                            "X2-C",
+                            "Nbsf",
+                            "Rx", 
+                            "N33"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "example": "N9"
+                        }
+                      ]
+                    }
+                  },
+                  "traceDepth": {
+                    "type": "string",
+                    "enum": [
+                      "MINIMUM",
+                      "MEDIUM",
+                      "MAXIMUM",
+                      "MINIMUMWITHOUTVENDORSPECIFICEXTENSION",
+                      "MEDIUMWITHOUTVENDORSPECIFICEXTENSION",
+                      "MAXIMUMWITHOUTVENDORSPECIFICEXTENSION"
+                    ]
+                  }
+                },
+                "required": [
+                  "traceSessionId",
+                  "traceObjectType",
+                  "traceObjectValue",
+                  "traceInterfaces"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok Acknowledged"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Generic Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Terminate an active Subscriber Level Tracing (SLT) session at the TPaaS",
+        "operationId": "SltStop",
+        "tags": [
+          "slt",
+          "tpaas"
+        ],
+        "parameters": [
+          {
+            "name": "traceSessionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the SLT session",
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok Acknowledged"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Generic Error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Subscriber Level Tracing (SLT) session at TPaaS",
+        "operationId": "SltGet",
+        "tags": [
+          "slt",
+          "tpaas",
+          "operationonlytpaas"
+        ],
+        "parameters": [
+          {
+            "name": "traceSessionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the SLT session",
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok Acknowledged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nfId": {
+                        "type": "string",
+                        "example": "5gc"
+                      },
+                      "traceSessionId": {
+                        "type": "string",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                      },
+                      "state": {
+                        "type": "string",
+                        "enum": [
+                          "RUNNING",
+                          "SUSPENDED"
+                        ]
+                      },
+                      "traceObjectType": {
+                        "type": "string",
+                        "enum": [
+                          "SUPI",
+                          "GPSI",
+                          "PEI",
+                          "SUCI",
+                          "IMEISV",
+                          "NF",
+                          "UEIP",
+                          "CELLLIST"
+                        ]
+                      },
+                      "traceObjectValue": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "*"
+                            ]
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "example": "470010171566423"
+                      },
+                      "traceInterfaces": {
+                        "type": "array",
+                        "description": "The list of interfaces to which this session pertains",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "N4",
+                                "N2",
+                                "N8",
+                                "N10",
+                                "N11",
+                                "N12",
+                                "N13",
+                                "N14",
+                                "N15",
+                                "N16",
+                                "N20",
+                                "N22",
+                                "N24",
+                                "N26",
+                                "N27",
+                                "N31",
+                                "N58",
+                                "Nnrf",
+                                "GTP_V1",
+                                "ALL",
+                                "NG-C",
+                                "Xn-C",
+                                "Uu",
+                                "F1-C",
+                                "E1",
+                                "E2",
+                                "X2-C",
+                                "Nbsf",
+                                "Rx", 
+                                "N33"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "example": "N9"
+                            }
+                          ]
+                        }
+                      },
+                      "traceDepth": {
+                        "type": "string",
+                        "enum": [
+                          "MINIMUM",
+                          "MEDIUM",
+                          "MAXIMUM",
+                          "MINIMUMWITHOUTVENDORSPECIFICEXTENSION",
+                          "MEDIUMWITHOUTVENDORSPECIFICEXTENSION",
+                          "MAXIMUMWITHOUTVENDORSPECIFICEXTENSION"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "nfId",
+                      "traceSessionId",
+                      "state",
+                      "traceObjectType",
+                      "traceObjectValue",
+                      "traceInterfaces"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Generic Error"
+          }
+        }
+      }
+    },
+    "/tpaas/slt/sessions/{traceSessionId}/suspend": {
+      "put": {
+        "summary": "Suspend an active Subscriber Level Tracing (SLT) session at TPaaS",
+        "operationId": "SltSuspend",
+        "tags": [
+          "slt",
+          "tpaas"
+        ],
+        "parameters": [
+          {
+            "name": "traceSessionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the SLT session",
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok Acknowledged"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Generic Error"
+          }
+        }
+      }
+    },
+    "/tpaas/slt/sessions/{traceSessionId}/resume": {
+      "put": {
+        "summary": "Resume a suspended Subscriber Level Tracing (SLT) session at TPaaS",
+        "operationId": "SltResume",
+        "tags": [
+          "slt",
+          "tpaas"
+        ],
+        "parameters": [
+          {
+            "name": "traceSessionId",
+            "in": "path",
+            "required": true,
+            "description": "Id of the SLT session",
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok Acknowledged"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Generic Error"
+          }
+        }
+      }
+    },
+    "/tpaas/slt/sessions/": {
+      "get": {
+        "summary": "Get all active and suspended Subscriber Level Tracing (SLT) session at the nf level at TPaaS",
+        "operationId": "SltGetAll",
+        "tags": [
+          "slt",
+          "tpaas",
+          "operationonlytpaas"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok Acknowledged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nfId": {
+                        "type": "string",
+                        "example": "5gc"
+                      },
+                      "traceSessionId": {
+                        "type": "string",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                      },
+                      "state": {
+                        "type": "string",
+                        "enum": [
+                          "RUNNING",
+                          "SUSPENDED"
+                        ]
+                      },
+                      "traceObjectType": {
+                        "type": "string",
+                        "enum": [
+                          "SUPI",
+                          "GPSI",
+                          "PEI",
+                          "SUCI",
+                          "IMEISV",
+                          "NF",
+                          "UEIP",
+                          "CELLLIST"
+                        ]
+                      },
+                      "traceObjectValue": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "*"
+                            ]
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "example": "470010171566423"
+                      },
+                      "traceInterfaces": {
+                        "type": "array",
+                        "description": "The list of interfaces to which this session pertains",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "N4",
+                                "N2",
+                                "N8",
+                                "N10",
+                                "N11",
+                                "N12",
+                                "N13",
+                                "N14",
+                                "N15",
+                                "N16",
+                                "N20",
+                                "N22",
+                                "N24",
+                                "N26",
+                                "N27",
+                                "N31",
+                                "N58",
+                                "Nnrf",
+                                "GTP_V1",
+                                "ALL",
+                                "NG-C",
+                                "Xn-C",
+                                "Uu",
+                                "F1-C",
+                                "E1",
+                                "E2",
+                                "X2-C",
+                                "Nbsf",
+                                "Rx", 
+                                "N33"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "example": "N9"
+                            }
+                          ]
+                        }
+                      },
+                      "traceDepth": {
+                        "type": "string",
+                        "enum": [
+                          "MINIMUM",
+                          "MEDIUM",
+                          "MAXIMUM",
+                          "MINIMUMWITHOUTVENDORSPECIFICEXTENSION",
+                          "MEDIUMWITHOUTVENDORSPECIFICEXTENSION",
+                          "MAXIMUMWITHOUTVENDORSPECIFICEXTENSION"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "nfId",
+                      "traceSessionId",
+                      "state",
+                      "traceObjectType",
+                      "traceObjectValue",
+                      "traceInterfaces"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cause": {
+                      "type": "string",
+                      "example": "MANDATORY_IE_MISSING"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Unable to execute command due to missing JSON IE"
+                    },
+                    "invalidParams": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "param": {
+                            "type": "string",
+                            "example": "/traceObjectValue"
+                          }
+                        },
+                        "required": [
+                          "param"
+                        ]
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Generic Error"
+          }
+        }
+      }
+    }
+  }
+}

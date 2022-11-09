@@ -1,0 +1,29 @@
+{{- if and .Values.global.mtcil.enableServiceprovisioning .Values.global.mtcil.enableMandatoryServices }}
+{{- if and (.Values.global.mtcil.enableMtcilScaling) (.Values.scaling.enabled)}}
+{{- $cnfHdr := (dict "" "") -}}
+{{- include "cnfTplHeader_2_24" (dict "cnfHdr" $cnfHdr "dot" . ) -}}
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+{{- include "cnfTplMetadata_2_24" (dict "setOffset" "0" "cnfHdr" $cnfHdr "metadata" .Values.componentSpec.deployment.pod_metaspec) }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tpaas
+  minReplicas: {{ .Values.scaling.min_replicas }}
+  maxReplicas: {{ .Values.scaling.max_replicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.scaling.target_cpu_percentage }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.scaling.target_memory_percentage }}
+{{- end -}}
+{{- end }}

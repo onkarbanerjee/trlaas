@@ -1,0 +1,21 @@
+{
+	"config": {
+		"tpaas_settings": {
+			"log_level": "{{.Values.tpaas_service.log_level}}",
+			{{- if (and (hasKey .Values.tpaas_service "analytic_kafka_brokers") (.Values.tpaas_service.analytic_kafka_brokers)) }}
+				"analytic_kafka_brokers": [
+					"{{.Values.tpaas_service.analytic_kafka_brokers}}"
+				],
+			{{- end }}
+			{{- if (and (hasKey .Values.tpaas_service "schema_registry_url") (ne (.Values.tpaas_service.schema_registry_url) "")) }}
+				"schema_registry_url": "{{.Values.tpaas_service.schema_registry_url}}",
+			{{- end }}
+			"replication_factor": {{.Values.tpaas_service.replication_factor}},
+			"retry_count": {{.Values.tpaas_service.retry_count}},
+			"num_of_partitions": {{.Values.tpaas_service.num_of_partitions}}		
+		},
+		"slt": {
+			"maxActivePerNf": {{.Values.slt.maxActivePerNf}}
+		}
+	}
+}

@@ -1,0 +1,89 @@
+module mavenir-{{.Values.global.nf.nfId}}-tpaas-config {
+        namespace "urn:mavenir:ns:yang:cnp:tpaas:{{.Values.global.nf.nfId}}";
+
+        prefix {{.Values.nf.nfType}}-tpaas;
+
+        import ietf-inet-types { prefix inet; }
+
+        import tailf-common { prefix tailf; }
+
+        revision "2021-07-30" {
+            description "Added ipv6 and fqdn support for Analytic kafka brokers and Schema registry URL";
+        }
+        container config {
+                tailf:callpoint configUpdate {
+                            tailf:transaction-hook subtree;
+                        }
+                container tpaas_settings {
+                         leaf log_level {
+                                        type enumeration {
+                                                 enum INFO;
+                                                 enum DEBUG;
+                                                 enum ERROR;
+                                                 enum WARNING;
+                                                 enum EXCEPTION;
+                                                 enum ALL;
+                                            }
+                                        mandatory true;
+                                        description "Log Level for TPAAS to print. select all if want to print all levels.";
+                                }   
+                         leaf-list analytic_kafka_brokers {
+                                        type string {
+                                                 pattern '((\[((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}'
+                                                         + '((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|'
+                                                         + '(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}'
+                                                         + '(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))\](:+([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))))|'
+                                                         + '(((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
+                                                         + '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(:+([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))))|'
+                                                         + '(((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*'
+                                                         + '([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)(:+([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])))';
+                                        }
+                                       description "Analytic Kafka Endpoint. Accepted values ip:port, Here ip can be ipv4 or ipv6 or fqdn. Ex: ipv4(0.0.0.0:1234) ipv6([abcd:]:1234) any other value with :port will be considered as fqdn";
+                                }
+                         leaf schema_registry_url {
+                                        type string {
+                                                 pattern '((\[((http|https)://)?((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}'
+                                                         + '((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|'
+                                                         + '(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}'
+                                                         + '(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))\](:+([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))))|'
+                                                         + '((((http|https)://)?(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
+                                                         + '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(:+([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))))|'
+                                                         + '(((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*'
+                                                         + '([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)(:+([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])))';
+                                        }
+                                        description "Schema Registry Endpoint. Accepted values ip:port. Here ip can be ipv4 or ipv6 or fqdn. Ex: ipv4(0.0.0.0:1234) ipv6([abcd:]:1234) any other value with :port will be considered as fqdn";
+                                }
+                         leaf retry_count {
+                                        type int32 {
+                                        	range "1 .. 1000";
+                                        }
+                                        mandatory true;
+                                        description "Number of retry counts to be attempted [1-1000]";
+                                }
+                         leaf num_of_partitions {
+                                        type int32 {
+                                        	range "1 .. 10";
+                                        }
+                                        mandatory true;
+                                        description "Number of partions to be created in analytics kafka for all topic";
+                                }
+                         leaf replication_factor {
+                                        type int32 {
+                                        	range "1 .. 10";
+                                        }
+                                        mandatory true;
+                                        description "Number of replication factor";
+                                }
+              }
+                        
+                container slt {
+                         leaf maxActivePerNf {
+                                        type int32 {
+                                        	range "1 .. 1000";
+                                        }
+                                        default 10;
+                                        description "Maximum number of SLT sessions that could be in ‘RUNNING’ or ‘SUSPENDED’ state at any given time per NF";
+                                }   
+              } 
+        }
+}

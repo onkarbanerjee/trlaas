@@ -1,0 +1,13 @@
+namespace TrlCimInterface;
+table TrlData {
+     key:string; // fieldname
+     value:string; //value
+     type:string;// type
+}
+
+table TRLCim {
+	MTCILHeader:[TrlData]; //additional info
+	Trl:[ubyte];
+}
+root_type TRLCim;
+

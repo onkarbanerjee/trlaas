@@ -1,0 +1,18 @@
+{{- if and .Values.global.mtcil.enableServiceprovisioning .Values.global.mtcil.enableMandatoryServices }}
+{{- $cnfHdr := (dict "" "") -}}
+{{- include "cnfTplHeader_2_24" (dict "cnfHdr" $cnfHdr "dot" . ) -}}
+apiVersion: v1
+kind: Service
+{{- include "cnfTplMetadata_2_24" (dict "setOffset" "0" "cnfHdr" $cnfHdr "metadata" .Values.componentSpec.service_fend.metaspec) }}
+spec:
+ selector:
+   app: {{ .Values.componentSpec.deployment.pod_metaspec.labels.app }}
+ ports:
+ - name: http
+   port: {{ .Values.componentSpec.service_fend.ports.port }}
+   targetPort: {{ .Values.componentSpec.service_fend.ports.targetPort }}
+{{- if .Values.global.mtcil.ingress.enableLB }}
+   nodePort: 0
+{{- end }}
+ type: {{ printf "%s" ( ternary "ClusterIP" "NodePort" .Values.global.mtcil.ingress.enableLB ) }}
+{{- end }}

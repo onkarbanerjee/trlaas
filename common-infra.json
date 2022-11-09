@@ -1,0 +1,6 @@
+// This file is added for reference purpose only. 
+{
+		"mtcil_kafka_url": [
+			"kafka-svc.mvnr-mtcil1-infra-mtcil-mtcil1.svc.cluster.local:9092"
+		]
+}

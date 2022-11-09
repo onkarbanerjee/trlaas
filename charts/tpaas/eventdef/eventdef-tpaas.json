@@ -1,0 +1,107 @@
+{
+    "events": {
+         "TRLSchemaRegistrationFailure": {
+            "eventType": "COMMUNICATION",
+            "perceivedSeverity": "CRITICAL",
+            "probableCause": "schema-registry communication failure",
+            "specificProblem": "TPaaS unable to establish connection to schema-registry",
+            "rootCauseIndicator": "",
+            "trendIndication": "",
+            "correlatedNotifications": "",
+            "additionalText": "",
+            "proposedRepairAction": "Check if schema registry is up and running, If Schema registry is connected make sure schema is compatible.",
+            "serviceTypeAffected": "MULTIPLE",
+            "alarmHierarchy": "Independent",
+            "classification": "Deterioration",
+            "alarmType": "Communications alarm"
+        },
+        "TRLSchemaRegistrationSuccess": {
+            "eventType": "COMMUNICATION",
+            "perceivedSeverity": "CLEAR",
+            "probableCause": "schema-registry communication success",
+            "specificProblem": "TRL Schema Registration successfulll",
+            "rootCauseIndicator": "",
+            "trendIndication": "",
+            "correlatedNotifications": "TRLSchemaRegistrationFailure",
+            "additionalText": "",
+            "proposedRepairAction": "",
+            "serviceTypeAffected": "NONE",
+            "alarmHierarchy": "Independent",
+            "classification": "Notification",
+            "alarmType": ""
+        },
+        "SLTSchemaRegistrationFailure": {
+            "eventType": "COMMUNICATION",
+            "perceivedSeverity": "CRITICAL",
+            "probableCause": "schema-registry communication failure",
+            "specificProblem": "TPaaS unable to establish connection to schema-registry",
+            "rootCauseIndicator": "",
+            "trendIndication": "",
+            "correlatedNotifications": "",
+            "additionalText": "",
+            "proposedRepairAction": "Check if schema registry is up and running, If Schema registry is connected make sure schema is compatible.",
+            "serviceTypeAffected": "MULTIPLE",
+            "alarmHierarchy": "Independent",
+            "classification": "Deterioration",
+            "alarmType": "Communications alarm"
+        },
+        "SLTSchemaRegistrationSuccess": {
+            "eventType": "COMMUNICATION",
+            "perceivedSeverity": "CLEAR",
+            "probableCause": "schema-registry communication success",
+            "specificProblem": "SLT Schema Registration successfull",
+            "rootCauseIndicator": "",
+            "trendIndication": "",
+            "correlatedNotifications": "SLTSchemaRegistrationFailure",
+            "additionalText": "",
+            "proposedRepairAction": "",
+            "serviceTypeAffected": "NONE",
+            "alarmHierarchy": "Independent",
+            "classification": "Notification",
+            "alarmType": ""
+        },
+          "TpaasNbiFailure": {
+            "eventType": "COMMUNICATION",
+            "perceivedSeverity": "MAJOR",
+            "probableCause": "kafka communication failure",
+            "specificProblem": "TPaaS unable to establish connection to analytic kafka",
+            "rootCauseIndicator": "",
+            "trendIndication": "",
+            "correlatedNotifications": "",
+            "additionalText": "",
+            "proposedRepairAction": "Check Analytic kafka connectivity, if connection is ok Make sure topic exist.",
+            "serviceTypeAffected": "MULTIPLE",
+            "alarmHierarchy": "Independent",
+            "classification": "Deterioration",
+            "alarmType": "Communications alarm"
+        },
+        "TpaasNbiSuccess": {
+            "eventType": "COMMUNICATION",
+            "perceivedSeverity": "CLEAR",
+            "probableCause": "kafka connection successfull",
+            "specificProblem": "Connection towards analytic kafka successfull.",
+            "rootCauseIndicator": "",
+            "trendIndication": "",
+            "correlatedNotifications": "TpaasNbiFailure",
+            "additionalText": "",
+            "proposedRepairAction": "",
+            "serviceTypeAffected": "NONE",
+            "alarmHierarchy": "Independent",
+            "classification": "Notification",
+            "alarmType": ""
+        },
+        "Configured": {
+            "eventType": "CONFIGURATION",
+            "perceivedSeverity": "INFO",
+            "probableCause": "Full configuration available for application to be ready",
+            "specificProblem": "Application is configured.",
+            "rootCauseIndicator": "",
+            "trendIndication": "",
+            "correlatedNotifications": "",
+            "additionalText": "",
+            "proposedRepairAction": "No specific action required."
+        }
+    }
+}
+
+
